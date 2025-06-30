@@ -1,0 +1,112 @@
+/* === GLOBAL RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* === CSS VARIABLES === */
+:root {
+  --navbar-bg: whitesmoke;
+  --text-color: #111111;
+  --accent-color: #FFCC00;
+}
+
+.dark {
+  --navbar-bg: #111111;
+  --text-color: #ffffff;
+  --accent-color: #ffcc00;
+}
+
+/* === LIGHT MODE === */
+.LoginLandingPage {
+  padding: 2rem;
+  background: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* === DARK MODE === */
+.dark .LoginLandingPage {
+  color: #ffffff;
+  padding: 2rem;
+  background: #111;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* === THEME TOGGLE BUTTON === */
+.theme-toggle-button-landing-login {
+  position: absolute;    
+  top: 40px;              
+  right: 60px;            
+  background: none;
+  border: none;
+  font-size: 32px;       
+  cursor: pointer;
+  color: inherit;
+  z-index: 1000;         
+}
+
+/* === LOGO IMAGE === */
+.logoimage {
+  height: auto;
+  max-height: 40px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  position: absolute;
+  top: 40px;
+  left: 50px;
+}
+
+/* === RESPONSIVE STYLES === */
+/* Medium screens (tablets) */
+@media (max-width: 768px) {
+  .theme-toggle-button {
+    top: 30px;
+    right: 30px;
+    font-size: 28px;
+  }
+
+  .logoimage {
+    max-height: 36px;
+    top: 40px;
+    left: 30px;
+  }
+}
+
+/* Small screens (phones) */
+@media (max-width: 480px) {
+  .theme-toggle-button {
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+  }
+
+  .logoimage {
+    max-height: 32px;
+    top: 40px;
+    left: 20px;
+  }
+}
