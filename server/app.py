@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 import os
 
-# Loading environment variables.
+# Load environment variables
 load_dotenv()
 
 from db.Burnout_Tracker import db
@@ -31,25 +31,28 @@ db.init_app(app)
 migrate.init_app(app, db, directory="db/migrations")
 
 jwt.init_app(app)
-from utils.jwt_blocklist import jwt_blocklist
+api.init_app(app)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+
+# ==================== JWT Token Blocklist ====================
+from models.TokenBlocklist import TokenBlocklist
 
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
     jti = jwt_payload.get("jti")
-    return jti in jwt_blocklist
+    return db.session.query(TokenBlocklist.id).filter_by(jti=jti).first() is not None
 
 @jwt.revoked_token_loader
 def revoked_token_callback(jwt_header, jwt_payload):
     return jsonify({"error": "Token has been revoked. Please log in again."}), 401
 
-api.init_app(app)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
-
+# ==================== Register Routes ====================
 from models import * 
 from routes import all_routes
 
 for bp in all_routes:
     app.register_blueprint(bp, url_prefix='/api')
 
+# ==================== Run the App ====================
 if __name__ == "__main__":
     app.run(port=5555, debug=True)

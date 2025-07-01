@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 from models.User import User
+from models.TokenBlocklist import TokenBlocklist
 from db.Burnout_Tracker import db
 from utils.auth_utils import role_required
 from utils.jwt_blocklist import jwt_blocklist
@@ -84,14 +85,15 @@ def login():
     }), 200
 
 
-
 # ==================== LOGOUT ====================
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
     jti = get_jwt().get("jti")
-    jwt_blocklist.add(jti)
+    db.session.add(TokenBlocklist(jti=jti))
+    db.session.commit()
     return jsonify({"message": "Successfully logged out"}), 200
+
 
 
 # ==================== DUMMY ROUTE TO TEST RBAC Admin ====================
