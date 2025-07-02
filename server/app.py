@@ -34,6 +34,10 @@ jwt.init_app(app)
 api.init_app(app)
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
+# ==================== Register Routes ====================
+from models import * 
+from routes import all_routes
+
 # ==================== JWT Token Blocklist ====================
 from models.TokenBlocklist import TokenBlocklist
 
@@ -45,10 +49,6 @@ def check_if_token_revoked(jwt_header, jwt_payload):
 @jwt.revoked_token_loader
 def revoked_token_callback(jwt_header, jwt_payload):
     return jsonify({"error": "Token has been revoked. Please log in again."}), 401
-
-# ==================== Register Routes ====================
-from models import * 
-from routes import all_routes
 
 for bp in all_routes:
     app.register_blueprint(bp, url_prefix='/api')

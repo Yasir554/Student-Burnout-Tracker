@@ -89,12 +89,23 @@ def login():
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    jti = get_jwt().get("jti")
-    db.session.add(TokenBlocklist(jti=jti))
-    db.session.commit()
-    return jsonify({"message": "Successfully logged out"}), 200
+    try:
+        jwt_data = get_jwt()
+        jti = jwt_data.get("jti")
+        print(f"[DEBUG] JWT data: {jwt_data}")
+        print(f"[DEBUG] JTI: {jti}")
 
+        if not jti:
+            return jsonify({"error": "Token does not contain a jti"}), 400
 
+        blocked_token = TokenBlocklist(jti=jti)
+        db.session.add(blocked_token)
+        db.session.commit()
+        return jsonify({"message": "Successfully logged out"}), 200
+
+    except Exception as e:
+        print(f"[ERROR] Logout failed: {e}")
+        return jsonify({"error": str(e)}), 500
 
 # ==================== DUMMY ROUTE TO TEST RBAC Admin ====================
 @auth_bp.route('/admin-only', methods=['GET'])
@@ -103,8 +114,8 @@ def admin_only_route():
     return jsonify({"message": "You are an admin!"})
 
 
-# ==================== DUMMY ROUTE TO TEST RBAC Staff ====================
-@auth_bp.route('/staff-only', methods=['GET'])
-@role_required(['staff'])
+# ==================== DUMMY ROUTE TO TEST RBAC Student ====================
+@auth_bp.route('/student-only', methods=['GET'])
+@role_required(['student'])
 def staff_only_route():
-    return jsonify({"message": "You are a staff member!"})
+    return jsonify({"message": "You are a student!"})

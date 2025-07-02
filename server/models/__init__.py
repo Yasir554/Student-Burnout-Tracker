@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from db.Burnout_Tracker import db
 
 from .User import User
 from .TokenBlocklist import TokenBlocklist
